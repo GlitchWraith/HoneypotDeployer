@@ -1,0 +1,11 @@
+- name: DNF libselinux-python
+  when: ansible_facts['distribution'] == "Fedora"
+  dnf:
+    name: libselinux-python
+    state: latest
+
+- name: YUM libselinux-python
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution'] != "Fedora"
+  yum:
+    name: libselinux-python
+    state: latest

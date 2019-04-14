@@ -1,0 +1,12 @@
+---
+- name: Cowrie-Install
+  hosts: ['DockerHost', 'Cowrie-SSH-Telnet']  
+  become: true
+  gather_facts: true
+  roles:
+    - Basic
+    - Git
+    - Docker 
+    - seLinux   
+    - Cowrie-SSH-Telnet
+  

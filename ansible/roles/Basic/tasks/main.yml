@@ -1,0 +1,41 @@
+---
+- name: DNF pip
+  when: ansible_facts['distribution'] == "Fedora"
+  dnf:
+    name: ['python-pip','python3-pip']
+    state: latest
+
+- name: YUM pip
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution'] != "Fedora"
+  yum:
+    name: ['python-pip','python3-pip']
+    state: latest
+
+- name: APT pip
+  when: ansible_facts['os_family']|lower == 'debian'
+  apt: 
+    name: ['python-pip','python3-pip']
+    state: latest
+- name: Honeypot Group
+  group:
+    name: Honeypot-Group
+    state: present
+#- name: Disallow password authentication
+#  lineinfile: 
+#              dest=/etc/ssh/sshd_config
+#              regexp="^PasswordAuthentication"
+#              line="PasswordAuthentication no"
+#              state=present
+#  notify: Restart ssh
+
+#- name: Disallow root SSH access
+#  lineinfile: 
+#              dest=/etc/ssh/sshd_config
+#              regexp="^PermitRootLogin"
+#              line="PermitRootLogin no"
+#              state=present
+#  notify: Restart ssh
+#
+#  handlers:
+#  - name: Restart ssh
+#    service: name=ssh state=restarted

@@ -1,0 +1,9 @@
+
+- hosts:  ['DockerHost', 'HoneySMB', 'Cowrie-SSH', 'Cowrie-Telnet', 'Cowrie-SSH-Telnet', 'TelnetLogger', 'pythonftp']
+  become: true
+  tasks:
+  - name: Get Containers Details    
+    shell: docker ps -a
+    register: Output
+  - name: Display Container Status's
+    debug: var=Output.stdout_lines

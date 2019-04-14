@@ -1,0 +1,18 @@
+# File to pull ubuntu box and provision docker onto it 
+Vagrant.configure("2") do |config|
+    config.vm.box = "roboxes/ubuntu1804"
+
+    config.vm.provider :libvirt do |libvirt|
+        libvirt.cpus = 4
+        libvirt.memory = 8192
+#        config.vm.network :public_network, :dev => "eno1", :mode => "bridge", :type => "bridge"
+      end
+    config.vm.define "VM" do |box|
+      box.vm.hostname = "VM-Ubuntu-Docker-Host"
+  
+      box.vm.provision "ansible" do |ansible|        
+          ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
+          ansible.playbook = "UbuntuDocker.yml"
+          end
+      end
+  end

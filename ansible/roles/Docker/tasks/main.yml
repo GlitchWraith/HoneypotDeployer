@@ -1,0 +1,31 @@
+- name: "Installing Docker (dnf)" 
+  when: ansible_facts['distribution'] == "Fedora"
+  dnf:
+    name: docker
+    state: latest
+
+- name: "Installing Docker (yum)" 
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution'] != "Fedora"
+  yum:
+    name: docker
+    state: latest
+
+- name: "Installing Docker (apt Generic)" 
+  when: ansible_facts['os_family']|lower == 'debian'
+  apt:
+    name: docker.io
+    state: latest
+
+- name: Python Docker module
+  pip:
+    name: docker
+
+- name: RedHat systemctl enable Docker
+  when: ansible_facts['os_family']|lower == 'redhat'
+  shell: systemctl enable docker
+  become: yes
+ 
+- name: RedHat systemctl start Docker
+  when: ansible_facts['os_family']|lower == 'redhat'
+  shell: systemctl start docker
+  become: yes

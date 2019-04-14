@@ -1,0 +1,21 @@
+---
+- name: DNF Group @virtualisation
+  when: ansible_facts['distribution'] == "Fedora"
+  dnf:
+    name: '@virtualization'
+    state: latest
+
+- name: YUM Group @virtualisation
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution'] != "Fedora"
+  yum:
+    name: '@virtualization'
+    state: latest
+
+- name: APT install Virtualisation Tools
+  when: ansible_facts['os_family']|lower == 'debian'
+  apt: 
+    name: ['qemu-kvm', 'libvirt-clients', 'libvirt-daemon-system', 'bridge-utils']
+    state: latest
+  
+#- name: Making a bridge
+#  shell: virsh iface-bridge eno4 br1

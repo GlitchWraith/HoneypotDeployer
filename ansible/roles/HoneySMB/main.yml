@@ -1,0 +1,69 @@
+- name: Making Directory
+  file:
+    path: /opt/Honeypot-SMB-HoneySMB
+    state: directory
+    mode: 0776
+    group: Honeypot-Group
+
+- name: Git Actions For HoneySMB Repo
+  git:
+   repo: "https://github.com/RealmOfTibbles/HoneySMB.git"
+   dest: /opt/Honeypot-SMB-HoneySMB/
+   clone: yes
+   update: yes
+   force: yes
+
+- name: Making Log Directory
+  file:
+    path: /opt/Honeypot-SMB-HoneySMB/logs
+    state: directory
+    mode: 0776
+    group: Honeypot-Group
+
+- name: Making Drive Directory
+  file:
+    path: /opt/Honeypot-SMB-HoneySMB/smbDrive
+    state: directory
+    mode: 0776
+    group: Honeypot-Group
+
+    
+- name: Moving Share Config
+  copy: 
+    src: ../../../../HoneySMB/shares.conf 
+    dest: /opt/Honeypot-SMB-HoneySMB/shares.conf
+    mode: 0664
+    group: Honeypot-Group
+- name: Moving smb Config
+  copy:
+    src:  ../../../../HoneySMB/smb.conf
+    dest: /opt/Honeypot-SMB-HoneySMB/smb.conf
+    mode: 0664
+    group: Honeypot-Group
+
+- name: Moving Drive Contence
+  copy:
+    src:  ../../../../HoneySMB/Drive/
+    dest: /opt/Honeypot-SMB-HoneySMB/smbDrive/
+    mode: 0664
+    group: Honeypot-Group
+
+- name: Building Script Run   
+  shell: ./Build-Quiet.sh 0.0.0.0
+  become: yes
+  args:
+     chdir: /opt/Honeypot-SMB-HoneySMB/
+  register: status
+
+- name: Waiting For Build Script to Complete  
+  wait_for:
+    path: /opt/Honeypot-SMB-HoneySMB/Done
+    search_regex: completed 
+
+- name: Get Containers Details
+  become: true
+  shell: docker ps -l 
+  register: Output
+
+- name: Display Container Status's
+  debug: var=Output.stdout_lines

@@ -1,0 +1,12 @@
+---
+- name: TelnetLogger-Install
+  hosts: ['DockerHost', 'TelnetLogger']  
+  become: true
+  gather_facts: true
+  roles:
+    - Basic
+    - Git
+    - Docker 
+    - seLinux   
+    - telnetlogger
+  

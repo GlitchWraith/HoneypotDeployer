@@ -1,0 +1,62 @@
+- name: Making Directory
+  file:
+    path: /opt/Honeypot-SSH-Telnet-Cowrie
+    state: directory
+    mode: 0775
+    group: Honeypot-Group
+
+- name: Git Actions For Cowrie Repo
+  git:
+   repo: "https://github.com/RealmOfTibbles/cowrie.git"
+   dest: /opt/Honeypot-SSH-Telnet-Cowrie/
+   clone: yes
+   update: yes
+   force: yes
+ 
+- name: Moving Cowrie Config
+  copy:
+    src:  ../../../../Cowrie-SSH-Telnet/cowrie.cfg.dist
+    dest: /opt/Honeypot-SSH-Telnet-Cowrie/etc/cowrie.cfg.dist
+    mode: 0664
+    group: Honeypot-Group
+
+- name: Moving Filesystem Additions
+  copy:
+    src:  ../../../../Cowrie-SSH-Telnet/honeyfs/
+    dest: /opt/Honeypot-SSH-Telnet-Cowrie/honeyfs/
+    mode: 0664
+    group: Honeypot-Group
+
+
+- name: Building Docker Image
+  shell: docker build -t honeypot-cowrie-ssh-telnet /opt/Honeypot-SSH-Telnet-Cowrie/
+  args:
+     chdir: /opt/Honeypot-SSH-Telnet-Cowrie/
+
+- name: Run Container
+  docker_container:
+        name: Honeypot-SSH-Telnet-Cowrie
+        image: "honeypot-cowrie-ssh-telnet"
+        state: started
+        restart: yes
+        ports:
+        - "2222:2222"
+        - "2223:23"
+ #       container_limits:
+        cpu_shares: 768
+        memory: 512m
+#        cpu_period: 100000
+        cpu_quota: 50000
+#        cpus: 0.75
+        cap_drop:
+        - all
+
+#     docker run --memory=512m --cpus="0.75" --cpu-shares=768 --name Cowrie -d -p 0.0.0.0:2222:2222  -p 0.0.0.0:2223:2223  -i Cowrie-Honeypot:SSH -ti
+
+- name: Get Containers Details
+  become: true
+  shell: docker ps -l 
+  register: Output
+
+- name: Display Container Status's
+  debug: var=Output.stdout_lines

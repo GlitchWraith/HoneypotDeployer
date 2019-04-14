@@ -1,0 +1,42 @@
+- name: Making Directory
+  file:
+    path: /opt/Honeypot-Telnet-telnetLogger-RAW
+    state: directory
+    mode: 0775
+
+- name: Git Actions For HoneySMB Repo
+  git:
+   repo: "https://github.com/RealmOfTibbles/telnetlogger.git"
+   dest: /opt/Honeypot-Telnet-telnetLogger-RAW/
+   clone: yes
+   update: yes
+   force: yes
+
+- make: 
+    chdir: /opt/Honeypot-Telnet-telnetLogger-RAW/
+
+
+
+#- name: Run Container
+#  docker_container:
+#        name: Honeypot-Telnet-telnetLogger
+#        image: "Honeypot-telnetlogger"
+#        state: started
+#        restart: yes
+#        ports:
+#        - "2222:2222"
+#        - "2223:2223"
+ #       container_limits:
+ #           cpushares: 768
+ #           memory: 512m
+ #           cpus: 0.75
+
+#     docker run --memory=512m --cpus="0.75" --cpu-shares=768 --name Cowrie -d -p 0.0.0.0:2222:2222  -p 0.0.0.0:2223:2223  -i Cowrie-Honeypot:SSH -ti
+
+- name: Get Containers Details
+  become: true
+  shell: docker ps -l 
+  register: Output
+
+- name: Display Container Status's
+  debug: var=Output.stdout_lines

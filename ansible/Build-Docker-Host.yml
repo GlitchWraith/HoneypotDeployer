@@ -1,0 +1,38 @@
+- name: Building Docker VM
+  hosts: KVM_Host  
+  become: true
+  gather_facts: true
+  roles:
+    - KVM
+    - Vagrant
+    - Ansible
+    - seLinux
+    - Basic
+ #   - Git
+  tasks:
+    - name: Making Directory for File Transfers
+      file:
+        path: /opt/Honeypot-Vagrant-Docker-Host
+        state: directory
+        mode: 0775
+        group: Honeypot-Group
+
+    - name: Copying Files
+      copy:
+        src: ../Vagrant-Docker-Host/
+#        src: ../Vagrant-Fedora-Cloud/
+        dest: /opt/Honeypot-Vagrant-Docker-Host/
+        mode: 0775
+        group: Honeypot-Group
+        force: yes
+
+    - name: Vagrant Up
+      shell: vagrant up   
+      args:
+       chdir: /opt/Honeypot-Vagrant-Docker-Host/
+
+    - name: Retreaving SSH keys
+      fetch:
+        src: /opt/Honeypot-Vagrant-Docker-Host/.vagrant/machines/VM/libvirt/private_key
+        dest: ../ssh-key/{{ inventory_hostname }}/
+        flat: true

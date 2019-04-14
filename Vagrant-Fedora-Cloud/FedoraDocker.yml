@@ -1,0 +1,43 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+    - pause:
+        seconds: 10
+    - name: Installing Docker
+      dnf: 
+        name: docker
+        state: latest
+    - name: RedHat systemctl enable Docker
+      shell: systemctl enable docker
+      become: yes 
+    - name: RedHat systemctl start Docker  
+      shell: systemctl start docker
+      become: yes
+    - name: Installing Python2
+      dnf: python
+      state: latest
+    - name: Change Vagrant Password
+      user:
+        name: vagrant
+        password: "{{ 'THISNEEDSTOBECHANGED' | password_hash('sha512') }}"
+    - name: Expire Password
+      shell: "chage -d 0 vagrant"
+
+#    - name: Disallow password authentication
+#      lineinfile: dest=/etc/ssh/sshd_config
+#              regexp="^PasswordAuthentication"
+#              line="PasswordAuthentication no"
+#              state=present
+#      notify: Restart ssh
+
+    - name: Disallow root SSH access
+      lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+      notify: Restart ssh
+  handlers:
+  - name: Restart ssh
+    service: name=ssh state=restarted

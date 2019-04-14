@@ -1,0 +1,51 @@
+- name: Making Directory
+  file:
+    path: /opt/Honeypot-FTP-Python-FTP
+    state: directory
+    mode: 0775
+    group: Honeypot-Group
+
+- name: Git Actions For Python ftp Repo
+  git:
+   repo: "https://github.com/RealmOfTibbles/cowrie.git"
+   dest: /opt/Honeypot-FTP-Python-FTP/
+   clone: yes
+   update: yes
+   force: yes
+ 
+#- name: Moving Cowrie Config
+#  copy:
+#    src:  ../../../../Python-FTP/
+#    dest: /opt/Honeypot-FTP-Python-FTP/
+#    mode: 0664
+
+
+- name: Building Docker Image
+  shell: docker build -t honeypot-ftp-python-ftp /opt/Honeypot-FTP-Python-FTP/
+  args:
+     chdir: /opt/Honeypot-FTP-Python-FTP/
+
+- name: Run Container
+  docker_container:
+        name: Honeypot-FTP-Python-FTP
+        image: "honeypot-ftp-python-ftp"
+        state: started
+        restart: yes
+        ports:
+        - "42069:21"
+        cpu_shares: 768
+        memory: 512m
+        cpu_period: 100000
+        cpu_quota: 50000
+        cap_drop:
+        - all
+
+
+
+- name: Get Containers Details
+  become: true
+  shell: docker ps -l 
+  register: Output
+
+- name: Display Container Status's
+  debug: var=Output.stdout_lines

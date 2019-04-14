@@ -1,0 +1,42 @@
+
+- hosts:  ['DockerHost', 'HoneySMB', 'Cowrie-SSH', 'Cowrie-Telnet', 'Cowrie-SSH-Telnet', 'TelnetLogger', 'pythonftp']
+  become: true
+  tasks:
+  - name: Make directory for logs to be located within
+    file: 
+        path: /opt/Honeypot-Logs/
+        state: directory
+        mode: 0776
+
+  - name: Pulling HoneySMB Logs out of the container
+    shell: "docker cp Honeypot-SMB:/home/smb/ /opt/Honeypot-Logs/HoneySMB/ "
+    ignore_errors: true
+  - name: Pulling Cowrie SSH Logs out of the container
+    shell: "docker cp Honeypot-SSH-Cowrie:/cowrie/var/log/cowrie /opt/Honeypot-Logs/Honeypot-SSH-Cowrie; docker cp Honeypot-SSH-Cowrie:/cowrie/var/lib/cowrie /opt/Honeypot-Logs/Honeypot-SSH-Cowrie"
+    ignore_errors: true
+  - name: Pulling Cowrie Telnet Logs out of the container
+    shell: "docker cp Honeypot-Telnet-Cowrie:/cowrie/var/log/cowrie /opt/Honeypot-Logs/Honeypot-Telnet-Cowrie; docker cp Honeypot-Telnet-Cowrie:/cowrie/var/lib/cowrie /opt/Honeypot-Logs/Honeypot-Telnet-Cowrie "
+    ignore_errors: true
+  - name: Pulling Cowrie SSH Telnet Logs out of the container
+    shell: "docker cp Honeypot-SSH-Telnet-Cowrie:/cowrie/var/log/cowrie /opt/Honeypot-Logs/Honeypot-SSH-Telnet-Cowrie ; docker cp Honeypot-SSH-Telnet-Cowrie:/cowrie/var/lib/cowrie /opt/Honeypot-Logs/Honeypot-SSH-Telnet-Cowrie "
+    ignore_errors: true
+  - name: Pulling TelnetLogger Logs out of the container
+    shell: "docker cp Honeypot-Telnet-telnetLogger:/opt/logs/ /opt/Honeypot-Logs/Honeypot-Telnet-telnetLogger/"
+    ignore_errors: true
+  - name: Pulling Python FTP Logs out of the container
+    shell: "docker cp Honeypot-FTP-Python-FTP:/opt/logs/ /opt/Honeypot-Logs/Honeypot-FTP-Python-FTP/"
+    ignore_errors: true
+
+
+
+#   Ansible Module does not work with folders use rsync
+#  - name: Pull Logs 
+#    fetch:
+#      src: /opt/Honeypot-Logs/
+#      dest: /opt/Honeypot-Logs/
+    
+  - name: Get Containers Details    
+    shell: docker ps -a
+    register: Output
+  - name: Display Container Status's
+    debug: var=Output.stdout_lines

@@ -1,0 +1,12 @@
+---
+- name: pythonftp-Install
+  hosts: ['DockerHost', 'pythonftp']  
+  become: true
+  gather_facts: true
+  roles:
+    - Basic
+    - Git
+    - Docker 
+    - seLinux   
+    - Python-FTP
+  

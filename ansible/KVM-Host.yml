@@ -1,0 +1,9 @@
+- name: KVM & Vagrant Install
+  hosts: KVM_Host  
+  become: true
+  gather_facts: true
+  roles:
+    - Basic
+    - KVM
+    - Vagrant
+    - Ansible
