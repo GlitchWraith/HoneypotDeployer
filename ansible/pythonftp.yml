@@ -6,7 +6,7 @@
   roles:
     - Basic
     - Git
-    - Docker 
+    - Docker
     - seLinux   
-    - Python-FTP
+    - ftp-python-honeypot
   

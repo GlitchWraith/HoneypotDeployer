@@ -33,14 +33,7 @@
         cpu_quota: 50000
         cap_drop:
         - all  
-             
- #       container_limits:
- #           cpushares: 768
- #           memory: 512m
- #           cpus: 0.75
-
-
-
+   
 - name: Get Containers Details
   become: true
   shell: docker ps -l 

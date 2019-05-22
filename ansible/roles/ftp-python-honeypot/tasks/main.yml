@@ -7,18 +7,12 @@
 
 - name: Git Actions For Python ftp Repo
   git:
-   repo: "https://github.com/RealmOfTibbles/cowrie.git"
+   repo: "https://github.com/RealmOfTibbles/python-ftp-honeypot"
    dest: /opt/Honeypot-FTP-Python-FTP/
    clone: yes
    update: yes
    force: yes
  
-#- name: Moving Cowrie Config
-#  copy:
-#    src:  ../../../../Python-FTP/
-#    dest: /opt/Honeypot-FTP-Python-FTP/
-#    mode: 0664
-
 
 - name: Building Docker Image
   shell: docker build -t honeypot-ftp-python-ftp /opt/Honeypot-FTP-Python-FTP/

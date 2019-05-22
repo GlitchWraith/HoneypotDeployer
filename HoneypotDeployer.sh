@@ -1,3 +1,4 @@
+#!/bin/bash
 # Functions
 
 # Honeypot Launchers
@@ -61,7 +62,7 @@ TelNetLogger(){
     
 }
 
-fpt(){    
+ftp(){    
 	echo "[!] python ftp honeypot Deployment "
     echo "[+] Low Interaction ftp Honeypot"
     echo -e "[+] Uses Docker"
@@ -206,7 +207,7 @@ if [ $# == 2 ] ; then
                 exit
             ;;
             SSH)                     
-                Cowrie
+                Cowrie-SSH
                 exit
             ;;         
             Cowrie)  
@@ -231,6 +232,10 @@ if [ $# == 2 ] ; then
             ;;
             Python-ftp)
                 ftp
+                exit
+            ;;
+            TelNetLogger)
+                TelNetLogger
                 exit
             ;;
 
@@ -266,7 +271,7 @@ if [ $# == 2 ] ; then
             Backup_hosts
             echo "[DockerHost]" > ansible/hosts
             echo $1 >> ansible/hosts            
-            Cowrie
+            Cowrie-SSH
             exit
             ;;
          
@@ -371,7 +376,7 @@ if [ $# == 3 ] ; then
                 exit
             ;;
             SSH)                     
-                Cowrie
+                Cowrie-SSH
                 exit
             ;;         
             Cowrie)  
@@ -398,6 +403,10 @@ if [ $# == 3 ] ; then
                 ftp
                 exit
             ;;
+            TelNetLogger)
+                TelNetLogger
+                exit
+            ;;
         esac
     fi
         case "$2" in
@@ -421,7 +430,7 @@ if [ $# == 3 ] ; then
                 Backup_hosts
                 echo "[DockerHost]" > ansible/hosts
                 echo $1 >> ansible/hosts            
-                Cowrie
+                Cowrie-SSH
                 exit
             ;;
          
@@ -467,6 +476,13 @@ if [ $# == 3 ] ; then
                 echo $1 >> ansible/hosts
                 ftp
                 exit
+                ;;
+            TelNetLogger)
+                Backup_hosts
+                echo "[DockerHost]" > ansible/hosts
+                echo $1 >> ansible/hosts            
+                TelNetLogger
+                exit            
                 ;;
         esac
 fi

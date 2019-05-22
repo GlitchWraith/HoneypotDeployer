@@ -24,7 +24,7 @@
     shell: "docker cp Honeypot-Telnet-telnetLogger:/opt/logs/ /opt/Honeypot-Logs/Honeypot-Telnet-telnetLogger/"
     ignore_errors: true
   - name: Pulling Python FTP Logs out of the container
-    shell: "docker cp Honeypot-FTP-Python-FTP:/opt/logs/ /opt/Honeypot-Logs/Honeypot-FTP-Python-FTP/"
+    shell: "docker cp Honeypot-FTP-Python-FTP:/opt/ /opt/Honeypot-Logs/Honeypot-FTP-Python-FTP/"
     ignore_errors: true
 
 

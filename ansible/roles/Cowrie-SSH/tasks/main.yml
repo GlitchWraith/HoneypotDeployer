@@ -13,19 +13,19 @@
    update: yes
    force: yes
  
-- name: Moving Cowrie Config
-  copy:
-    src:  ../../../../Cowrie-SSH/cowrie.cfg.dist
-    dest: /opt/Honeypot-SSH-Cowrie/etc/cowrie.cfg.dist
-    group: Honeypot-Group
-    mode: 0664
+#- name: Moving Cowrie Config
+#  copy:
+#    src:  ../../../../Cowrie-SSH/cowrie.cfg.dist
+#    dest: /opt/Honeypot-SSH-Cowrie/etc/cowrie.cfg.dist
+#    group: Honeypot-Group
+#    mode: 0664
 
-- name: Moving Filesystem Additions
-  copy:
-    src:  ../../../../Cowrie-SSH/honeyfs/
-    dest: /opt/Honeypot-SSH-Cowrie/honeyfs/
-    group: Honeypot-Group
-    mode: 0664
+#- name: Moving Filesystem Additions
+#  copy:
+#    src:  ../../../../Cowrie-SSH/honeyfs/
+#    dest: /opt/Honeypot-SSH-Cowrie/honeyfs/
+#    group: Honeypot-Group
+#    mode: 0664
 
 
 - name: Building Docker Image
@@ -41,17 +41,15 @@
         restart: yes
         ports:
         - "2222:2222"
- #       - "2223:2223"
- #       container_limits:
+ 
         cpu_shares: 768
         memory: 512m
 #        cpu_period: 100000
         cpu_quota: 50000
-#        cpus: 0.75
         cap_drop:
         - all
 
-#     docker run --memory=512m --cpus="0.75" --cpu-shares=768 --name Cowrie -d -p 0.0.0.0:2222:2222  -p 0.0.0.0:2223:2223  -i Cowrie-Honeypot:SSH -ti
+#     docker run --memory=512m --cpus="0.75" --cpu-shares=768 --name Honeypot-SSH-Cowrie -d -p 0.0.0.0:2222:2222   -i honeypot-cowrie-ssh -ti
 
 - name: Get Containers Details
   become: true
