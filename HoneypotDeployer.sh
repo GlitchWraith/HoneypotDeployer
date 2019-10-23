@@ -74,9 +74,13 @@ ftp(){
     
 }
 # Log pull
+Ansible-LogPull(){
+	ansible-playbook ansible/LogPull.yaml
+	exit
+}
 
 PULL(){
-    ansible-playbook ansible/LogPull.yml
+    ansible-playbook ansible/LegacyPull.yaml 
     rsync -avzru `cat ansible/Docker-Host`:/opt/Honeypot-Logs /opt/Honeypot-Logs/`cat ansible/Docker-Host`
     exit
 }
@@ -157,9 +161,12 @@ Backup_hosts(){
 if [ $# == 1 ] ; then 
 
     case "$1" in
-        --LogPull)
-            PULL
-            ;;
+	--LogCollect)
+            LegacyPull
+	    ;;
+	--Log-Pull)
+	    Ansible-LogPull
+	    ;;
         --help)            
             helpmsg
             ;;

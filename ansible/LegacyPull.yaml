@@ -1,6 +1,9 @@
 
 - hosts:  ['DockerHost', 'HoneySMB', 'Cowrie-SSH', 'Cowrie-Telnet', 'Cowrie-SSH-Telnet', 'TelnetLogger', 'pythonftp']
   become: true
+  vars:
+    folder_path: /opt/Honeypot-Logs
+    local_output_path: ../
   tasks:
   - name: Make directory for logs to be located within
     file: 
@@ -27,13 +30,6 @@
     shell: "docker cp Honeypot-FTP-Python-FTP:/opt/ /opt/Honeypot-Logs/Honeypot-FTP-Python-FTP/"
     ignore_errors: true
 
-
-
-#   Ansible Module does not work with folders use rsync
-#  - name: Pull Logs 
-#    fetch:
-#      src: /opt/Honeypot-Logs/
-#      dest: /opt/Honeypot-Logs/
     
   - name: Get Containers Details    
     shell: docker ps -a
