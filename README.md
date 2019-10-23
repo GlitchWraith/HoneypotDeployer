@@ -29,13 +29,15 @@ Honeypot Deployer takes up to three flags any more flags are ignored currently f
 |--------|--------|-------|----------|
 | --help |        |       |          |
 | --info |        |       |          |
-| --LogPull |     |       | See Info |
+| --LogCollect |    |    | See Info |
+| --Log-Pull |     |       | See Info |
 | --Build-Docker-Host|   |     |     |
 | --hosts |  |  | Will provision all Honeypots |
 | --hosts | Honeypot Name|   |   |
 | --KVM | Host Name |   | Only needed to build a VM for docker containers |
 | --DockerHost | Host Name | | Needed for Simple LogPull |
 | Host name | Honeypot Name | | One Time Honeypot Provison |
+
 
 The program will add a group called `Honeypot-Group` all the files will be accessable for users in this group. Users will have to be added manually to this group.
 ## Honeypots
@@ -74,12 +76,22 @@ Followed by the hostname/ip address
 10.0.0.4
 ````
 
-### LogPull
-LogPull in its defult state requires:
+### LogCollect
+LogCollect in its defult state requires:
 1. The local user and remote user have the same username and uses the ssh key ~/.ssh/id_rsa or specified key in ~/.ssh/config
 2. The User has declared the host with **--DockerHost**
 
-If ether of these requirements can not be met you will need to modify the *PULL()* function
+If both of these requirements can not be met you will need to modify the *PULL()* function
+
+### Log-Pull
+Log-Pull is a full ansible implentation to bring the log files from the container to the host it requires no config changes 
+
+### Log-Pull Vs LogCollect
+
+Log-Pull is entirly ansible based it needs no configuration but uses the ansible fetch module to transfer each file one at a time.
+LogCollect uses ansible to pull the logs from the containers then uses rsync to fetch the files to the host.
+
+
 
 ### HoneySMB
 
